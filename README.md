@@ -3,6 +3,10 @@
 - [Firebase](https://firebase.google.com/)
 - [FBSDK](https://github.com/facebook/react-native-fbsdk)
 
+## Screenshot
+
+[Test](img/android-img.png)
+
 ## Installation
 
 - Clone this project

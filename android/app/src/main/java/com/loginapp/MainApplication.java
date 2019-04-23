@@ -3,6 +3,8 @@ package com.loginapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -35,6 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGoogleSigninPackage(),
+            new FIRMessagingPackage(),
             new VectorIconsPackage(),
             new FBSDKPackage(mCallbackManager)
       );
@@ -52,11 +56,11 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   @Override
-public void onCreate() {
-  super.onCreate();
-  FacebookSdk.setApplicationId("2254682774624567");
-  FacebookSdk.sdkInitialize(this);
-  AppEventsLogger.activateApp(this);
-  SoLoader.init(this, /* native exopackage */ false);
-}
+  public void onCreate() {
+    super.onCreate();
+    FacebookSdk.setApplicationId("2254682774624567");
+    FacebookSdk.sdkInitialize(this);
+    AppEventsLogger.activateApp(this);
+    SoLoader.init(this, /* native exopackage */ false);
+  }
 }
