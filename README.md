@@ -5,7 +5,7 @@
 
 ## Screenshot
 
-[Test](img/android-img.png)
+![Test](img/android-img.png)
 
 ## Installation
 
