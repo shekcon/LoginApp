@@ -1,6 +1,7 @@
 # Login APP using React Native [Android]
 
 - [Firebase](https://firebase.google.com/)
+- [Google-signin](https://github.com/react-native-community/react-native-google-signin)
 - [FBSDK](https://github.com/facebook/react-native-fbsdk)
 
 ## Screenshot
