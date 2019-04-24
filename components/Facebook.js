@@ -1,15 +1,48 @@
 import React, { Component } from 'react';
 import {View, StyleSheet } from 'react-native';
 import { showMessage } from "react-native-flash-message";
-import { LoginButton, AccessToken} from 'react-native-fbsdk';
-import {Avatar} from 'react-native-elements';
+import { LoginManager, AccessToken} from 'react-native-fbsdk';
+import {Avatar, SocialIcon} from 'react-native-elements';
+import { throwStatement } from '@babel/types';
+
+
 
 export default class Facebook extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        avatar: null
+        avatar: null,
+        title: "Continue with Facebook"
       };
+    }
+
+    componentWillMount(){
+      this._checkStatus();
+    }
+
+    _checkStatus = () => {
+      AccessToken.getCurrentAccessToken().then(
+        (data) => {
+          const { accessToken } = data;
+          this.getInfoUser(accessToken);
+        }
+)
+    }
+
+    _login = () => {
+      LoginManager.logInWithReadPermissions(["public_profile"]).then(
+        function(result) {
+          if (result.isCancelled) {
+            console.log("Login cancelled");
+          } else {
+            console.log("Login successfull");
+          }
+        },
+        function(error) {
+          console.log("Login fail with error: " + error);
+        }
+      );
+      this._checkStatus();
     }
 
     getInfoUser = token => {
@@ -20,8 +53,7 @@ export default class Facebook extends Component {
           message: "Hi, " + json.name,
           type: "success",
         });
-        this.getInfoAvatar(json.id + '');
-  
+        this.getInfoAvatar(json.id);
       })
       .catch((error) => {
         console.error(error);
@@ -32,7 +64,10 @@ export default class Facebook extends Component {
       fetch ("http://graph.facebook.com/" + id + "/picture?type=square&redirect=false")
       .then((response) => response.json())
       .then((json) => {
-        this.setState({avatar: json.data.url});
+        this.setState({
+          avatar: json.data.url,
+          title: 'Log out'
+        });
       })
   
       .catch((error) => {
@@ -40,6 +75,17 @@ export default class Facebook extends Component {
       })
     }
   
+    onClick = () => {
+      if(!this.state.avatar){
+        this._login();
+      }
+      else{
+        this.setState({
+          avatar: null,
+          title: "Continue with Facebook"
+        });
+      }
+    }
     render() {
       return (
         <View style={styles.container}>
@@ -52,25 +98,13 @@ export default class Facebook extends Component {
           />
           </View>         
           }
-          <LoginButton
-            readPermissions={['public_profile']}
-            onLoginFinished={
-              (error, result) => {
-                if (error) {
-                  console.log("login has error: " + result.error);
-                } else if (result.isCancelled) {
-                  console.log("login is cancelled.");
-                } else {
-                  AccessToken.getCurrentAccessToken().then(
-                    (data) => {
-                      const { accessToken } = data;
-                      this.getInfoUser(accessToken);
-                    }
-                  )
-                }
-              }
-            }
-            onLogoutFinished={() => this.setState({avatar: null})}/>
+          <SocialIcon
+            style={{ width: 210, height: 35 }}
+            title={this.state.title}
+            button
+            type='facebook'
+            onPress={this.onClick}
+          />
         </View>
       );
     }
